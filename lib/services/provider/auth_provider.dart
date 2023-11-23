@@ -9,6 +9,7 @@ class ProviderAuth extends ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   CurrentUserSatatus? userStatus;
   CallStatus? status;
+  String errorMessage = '';
   TextEditingController emialController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -44,6 +45,7 @@ class ProviderAuth extends ChangeNotifier {
       notifyListeners();
       log('suc');
     } catch (e) {
+      errorMessage = e.toString();
       status = CallStatus.failed;
       notifyListeners();
       log(e.toString());
@@ -52,23 +54,24 @@ class ProviderAuth extends ChangeNotifier {
   }
 
   Future<void> loginUser() async {
-  status = CallStatus.waiting;
-  notifyListeners();
-  FirebaseAuth auth = FirebaseAuth.instance;
+    status = CallStatus.waiting;
+    notifyListeners();
+    FirebaseAuth auth = FirebaseAuth.instance;
 
-  try {
-    await auth.signInWithEmailAndPassword(
-      email: emialController.text,
-      password: passwordController.text,
-    );
-    status = CallStatus.success;
-    notifyListeners();
-    log('suc');
-  } catch (e) {
-    status = CallStatus.failed;
-    notifyListeners();
-    log(e.toString());
+    try {
+      await auth.signInWithEmailAndPassword(
+        email: emialController.text,
+        password: passwordController.text,
+      );
+      status = CallStatus.success;
+      notifyListeners();
+      log('suc');
+    } catch (e) {
+      errorMessage = e.toString();
+      status = CallStatus.failed;
+      notifyListeners();
+      log(e.toString());
+    }
+    log(status.toString());
   }
-  log(status.toString());
-}
 }

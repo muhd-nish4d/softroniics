@@ -41,6 +41,11 @@ class MyApp extends StatelessWidget {
               borderSide: const BorderSide(width: 1.5, color: Colors.blue),
             ),
           ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                  elevation: 5,
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white)),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[100]!),
           useMaterial3: true,
         ),

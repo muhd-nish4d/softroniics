@@ -30,6 +30,11 @@ class ScreenLogin extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 40),
+                    SizedBox(
+                      width: double.infinity,
+                      height: size.width * .35,
+                    ),
+                    const SizedBox(height: 20),
                     Visibility(
                       visible: isLogin ?? true,
                       child: Column(
@@ -144,38 +149,75 @@ class ScreenLogin extends StatelessWidget {
                                 backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white),
                             onPressed: () async {
-                              // if (isLogin == null || isLogin!) {
-                              //   await value.registerUser();
-                              // } else {
-                              //   await value.loginUser();
-                              // }
                               if (!_key.currentState!.validate()) {
                                 log('missing');
                               } else {
                                 if (value.status == null ||
                                     value.status == CallStatus.failed) {
-                                  log('hear');
                                   if (isLogin == null || isLogin!) {
-                                    await value.registerUser().then((value) {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                              builder: (ctx) => ScreenLogin(
-                                                    isLogin: false,
-                                                  )));
+                                    await value.registerUser().then((val) {
+                                      if (value.status == CallStatus.failed) {
+                                        var snackdemo = SnackBar(
+                                          content: Text(value.errorMessage),
+                                          backgroundColor: Colors.green,
+                                          elevation: 10,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: EdgeInsets.all(5),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackdemo);
+                                      } else {
+                                        const snackdemo = SnackBar(
+                                          content: Text('Registerd'),
+                                          backgroundColor: Colors.green,
+                                          elevation: 10,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: EdgeInsets.all(5),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackdemo);
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (ctx) =>
+                                                    ScreenHome()));
+                                      }
                                     });
                                   } else {
-                                    await value.loginUser().then((value) {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (ctx) =>
-                                                  const ScreenHome()));
+                                    await value.loginUser().then((val) {
+                                      if (value.status == CallStatus.failed) {
+                                        var snackdemo = SnackBar(
+                                          content: Text(value.errorMessage),
+                                          backgroundColor: Colors.green,
+                                          elevation: 10,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: EdgeInsets.all(5),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackdemo);
+                                      } else {
+                                        const snackdemo = SnackBar(
+                                          content: Text('Logined'),
+                                          backgroundColor: Colors.green,
+                                          elevation: 10,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: EdgeInsets.all(5),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackdemo);
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (ctx) =>
+                                                    const ScreenHome()));
+                                      }
                                     });
                                   }
-                                  log(value.emialController.text);
                                 }
                               }
                             },
-                            child: const Text('Create an accout')),
+                            child: value.status == CallStatus.waiting
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : const Text('Create an accout')),
                       ),
                     ),
                     TextButton(
@@ -187,7 +229,7 @@ class ScreenLogin extends StatelessWidget {
                                         isLogin: false,
                                       )));
                         },
-                        child: Text('Already'))
+                        child: const Text('Already registered'))
                   ],
                 ),
               ),
