@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:softroniics/services/helpers/enums/enum.dart';
 import 'package:softroniics/services/provider/auth_provider.dart';
+import 'package:softroniics/view/home/home.dart';
 import 'package:softroniics/view/login/widget/customTextField.dart';
 
 class ScreenLogin extends StatelessWidget {
@@ -39,11 +40,11 @@ class ScreenLogin extends StatelessWidget {
                             suffixIcon: Icons.person,
                             // keyboardType: TextInputType.name,
                             // textCapitalization: TextCapitalization.sentences,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
+                            validator: (txtVal) {
+                              if (txtVal == null || txtVal.isEmpty) {
                                 return 'Please enter your name';
                               } else {
-                                return '';
+                                return null;
                               }
                             },
                             controller: value.nameController,
@@ -55,11 +56,11 @@ class ScreenLogin extends StatelessWidget {
                               hintText: 'Mobile number',
                               // keyboardType: TextInputType.emailAddress,
                               // textCapitalization: TextCapitalization.none,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
+                              validator: (txtVal) {
+                                if (txtVal == null || txtVal.isEmpty) {
                                   return 'Enter your phone number';
                                 } else {
-                                  return '';
+                                  return null;
                                 }
                               },
                               controller: value.phoneController),
@@ -80,7 +81,7 @@ class ScreenLogin extends StatelessWidget {
                           if (textVal == null || textVal.isEmpty) {
                             return 'Enter your mail id';
                           } else {
-                            return '';
+                            return null;
                           }
                         }),
                     CustomTextField(
@@ -88,13 +89,13 @@ class ScreenLogin extends StatelessWidget {
                         suffixIcon: Icons.password_rounded,
                         controller: value.passwordController,
                         hintText: '**************',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
+                        validator: (txtVal) {
+                          if (txtVal == null || txtVal.isEmpty) {
                             return 'Create password';
-                          } else if (value.length < 5) {
+                          } else if (txtVal.length < 5) {
                             return 'Create a strong password';
                           } else {
-                            return '';
+                            return null;
                           }
                         }),
                     const SizedBox(height: 20),
@@ -123,12 +124,7 @@ class ScreenLogin extends StatelessWidget {
                       height: 70,
                       width: 70,
                       child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (ctx) => ScreenLogin(
-                                      isLogin: false,
-                                    )));
-                          },
+                          onPressed: () {},
                           style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: Colors.blue),
                               backgroundColor: Colors.blue[100],
@@ -148,21 +144,35 @@ class ScreenLogin extends StatelessWidget {
                                 backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white),
                             onPressed: () async {
-                              if (isLogin == null || isLogin!) {
-                                await value.registerUser();
-                              } else {
-                                await value.loginUser();
-                              }
+                              // if (isLogin == null || isLogin!) {
+                              //   await value.registerUser();
+                              // } else {
+                              //   await value.loginUser();
+                              // }
                               if (!_key.currentState!.validate()) {
                                 log('missing');
-                              }
-                              if (value.status == null ||
-                                  value.status == CallStatus.failed) {
-                                log(value.emialController.text);
-                                log(value.phoneController.text);
-                                log(value.nameController.text);
-                                log(value.passwordController.text);
-                                // log(value.emialController.text);
+                              } else {
+                                if (value.status == null ||
+                                    value.status == CallStatus.failed) {
+                                  log('hear');
+                                  if (isLogin == null || isLogin!) {
+                                    await value.registerUser().then((value) {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (ctx) => ScreenLogin(
+                                                    isLogin: false,
+                                                  )));
+                                    });
+                                  } else {
+                                    await value.loginUser().then((value) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const ScreenHome()));
+                                    });
+                                  }
+                                  log(value.emialController.text);
+                                }
                               }
                             },
                             child: const Text('Create an accout')),
