@@ -48,8 +48,6 @@ class ScreenLogin extends StatelessWidget {
                             heading: 'Your Name:',
                             hintText: 'Enter your full name',
                             suffixIcon: Icons.person,
-                            // keyboardType: TextInputType.name,
-                            // textCapitalization: TextCapitalization.sentences,
                             validator: (txtVal) {
                               if (txtVal == null || txtVal.isEmpty) {
                                 return 'Please enter your name';
@@ -64,8 +62,6 @@ class ScreenLogin extends StatelessWidget {
                               keyboardType: TextInputType.number,
                               suffixIcon: Icons.person,
                               hintText: 'Mobile number',
-                              // keyboardType: TextInputType.emailAddress,
-                              // textCapitalization: TextCapitalization.none,
                               validator: (txtVal) {
                                 if (txtVal == null || txtVal.isEmpty) {
                                   return 'Enter your phone number';
@@ -82,11 +78,7 @@ class ScreenLogin extends StatelessWidget {
                         suffixIcon: Icons.mail,
                         controller: value.emialController,
                         hintText: 'hello@gmail.com',
-                        // obscureText: true,
-                        // maxLength: 6,
                         keyboardType: TextInputType.emailAddress,
-                        // textCapitalization: TextCapitalization.none,
-                        // controller: _passwordController,
                         validator: (textVal) {
                           if (textVal == null || textVal.isEmpty) {
                             return 'Enter your mail id';
@@ -134,6 +126,7 @@ class ScreenLogin extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
+                    //Login with google account
                     SizedBox(
                       height: 70,
                       width: 70,
@@ -157,6 +150,8 @@ class ScreenLogin extends StatelessWidget {
                           child: Image.asset('assets/images/google.png')),
                     ),
                     const SizedBox(height: 20),
+
+                    // Login/Register Button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: SizedBox(
@@ -181,7 +176,7 @@ class ScreenLogin extends StatelessWidget {
                                           backgroundColor: Colors.green,
                                           elevation: 10,
                                           behavior: SnackBarBehavior.floating,
-                                          margin: EdgeInsets.all(5),
+                                          margin: const EdgeInsets.all(5),
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackdemo);
@@ -211,7 +206,7 @@ class ScreenLogin extends StatelessWidget {
                                           backgroundColor: Colors.green,
                                           elevation: 10,
                                           behavior: SnackBarBehavior.floating,
-                                          margin: EdgeInsets.all(5),
+                                          margin: const EdgeInsets.all(5),
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackdemo);
@@ -244,6 +239,7 @@ class ScreenLogin extends StatelessWidget {
                                     isRegister ? 'Create an accout' : 'Login')),
                       ),
                     ),
+                    // Button for Navigate to LoginScreen from Register Screen
                     Visibility(
                       visible: isRegister,
                       child: TextButton(

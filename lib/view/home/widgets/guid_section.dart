@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:softroniics/helpers/const/const.dart';
+import 'package:softroniics/view/splash/splash.dart';
 
 class GuidSection extends StatelessWidget {
   const GuidSection({
@@ -32,10 +36,22 @@ class GuidSection extends StatelessWidget {
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
-                              onPressed: () {},
-                              child: Text('call',
-                                  style: normalTextStyle.copyWith(
-                                      color: Colors.black))),
+                              onPressed: () async {
+                                try {
+                                  FirebaseAuth.instance.signOut().then((value) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const ScreenSplash()),
+                                        (route) => false);
+                                  });
+                                } catch (e) {
+                                  log(e.toString());
+                                }
+                              },
+                              child:
+                                  const Text('call', style: normalTextStyle)),
                         ),
                       )
                     ],

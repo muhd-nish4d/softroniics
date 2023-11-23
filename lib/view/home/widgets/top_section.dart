@@ -25,7 +25,7 @@ class TopSection extends StatelessWidget {
               child: Text(
             'Avoi the\nscare of\ncoronavirus',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 30),
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ))
         ],
       )),
