@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "805045177372",
+    "project_id": "softroniics-900ef",
+    "storage_bucket": "softroniics-900ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805045177372:android:33045b9d7d0c392ec263d9",
+        "android_client_info": {
+          "package_name": "com.example.softroniics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpsB6N6Nt9zquDNfRC1T1KqKfbMnZRVKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
