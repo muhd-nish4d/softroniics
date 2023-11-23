@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:softroniics/services/provider/auth_provider.dart';
 import 'package:softroniics/view/splash/splash.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white)),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue[100]!),
+          textTheme: GoogleFonts.poppinsTextTheme(),
           useMaterial3: true,
         ),
         home: const ScreenSplash(),
