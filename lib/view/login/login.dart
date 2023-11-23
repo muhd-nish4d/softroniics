@@ -1,15 +1,17 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:softroniics/services/helpers/enums/enum.dart';
+import 'package:softroniics/helpers/enums/enum.dart';
 import 'package:softroniics/services/provider/auth_provider.dart';
 import 'package:softroniics/view/home/home.dart';
 import 'package:softroniics/view/login/widget/customTextField.dart';
+import 'package:softroniics/view/login/widget/login_screen_lottie.dart';
 
 class ScreenLogin extends StatelessWidget {
-  ScreenLogin({super.key, this.isLogin});
-  final bool? isLogin;
+  ScreenLogin({super.key, this.isRegister = true});
+  final bool isRegister;
   final _key = GlobalKey<FormState>();
 
   @override
@@ -30,13 +32,16 @@ class ScreenLogin extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 40),
-                    SizedBox(
-                      width: double.infinity,
-                      height: size.width * .35,
-                    ),
+                    isRegister
+                        ? const RegisterLottie(
+                            lottiePath: 'assets/lottie/join_with_us.json',
+                            head: 'Join Us!')
+                        : const RegisterLottie(
+                            lottiePath: 'assets/lottie/password.json',
+                            head: 'Login'),
                     const SizedBox(height: 20),
                     Visibility(
-                      visible: isLogin ?? true,
+                      visible: isRegister,
                       child: Column(
                         children: [
                           CustomTextField(
@@ -90,9 +95,13 @@ class ScreenLogin extends StatelessWidget {
                           }
                         }),
                     CustomTextField(
+                        isObsecure: !value.isPasswordVisible,
                         heading: 'Password:',
-                        suffixIcon: Icons.password_rounded,
+                        suffixIcon: value.isPasswordVisible
+                            ? CupertinoIcons.eye_slash_fill
+                            : CupertinoIcons.eye,
                         controller: value.passwordController,
+                        isClickeble: true,
                         hintText: '**************',
                         validator: (txtVal) {
                           if (txtVal == null || txtVal.isEmpty) {
@@ -129,7 +138,17 @@ class ScreenLogin extends StatelessWidget {
                       height: 70,
                       width: 70,
                       child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            value.loginWithGoogleAC().then((val) {
+                              if (value.status == CallStatus.success) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) => const ScreenHome()),
+                                    (Route<dynamic> route) => false);
+                              } else {}
+                            });
+                          },
                           style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: Colors.blue),
                               backgroundColor: Colors.blue[100],
@@ -154,7 +173,7 @@ class ScreenLogin extends StatelessWidget {
                               } else {
                                 if (value.status == null ||
                                     value.status == CallStatus.failed) {
-                                  if (isLogin == null || isLogin!) {
+                                  if (isRegister) {
                                     await value.registerUser().then((val) {
                                       if (value.status == CallStatus.failed) {
                                         var snackdemo = SnackBar(
@@ -176,10 +195,12 @@ class ScreenLogin extends StatelessWidget {
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackdemo);
-                                        Navigator.of(context).push(
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
                                             MaterialPageRoute(
                                                 builder: (ctx) =>
-                                                    ScreenHome()));
+                                                    const ScreenHome()),
+                                            (Route<dynamic> route) => false);
                                       }
                                     });
                                   } else {
@@ -204,10 +225,12 @@ class ScreenLogin extends StatelessWidget {
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackdemo);
-                                        Navigator.of(context).push(
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
                                             MaterialPageRoute(
                                                 builder: (ctx) =>
-                                                    const ScreenHome()));
+                                                    const ScreenHome()),
+                                            (Route<dynamic> route) => false);
                                       }
                                     });
                                   }
@@ -217,19 +240,23 @@ class ScreenLogin extends StatelessWidget {
                             child: value.status == CallStatus.waiting
                                 ? const Center(
                                     child: CircularProgressIndicator())
-                                : const Text('Create an accout')),
+                                : Text(
+                                    isRegister ? 'Create an accout' : 'Login')),
                       ),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => ScreenLogin(
-                                        isLogin: false,
-                                      )));
-                        },
-                        child: const Text('Already registered'))
+                    Visibility(
+                      visible: isRegister,
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) => ScreenLogin(
+                                          isRegister: false,
+                                        )));
+                          },
+                          child: const Text('Already registered')),
+                    )
                   ],
                 ),
               ),

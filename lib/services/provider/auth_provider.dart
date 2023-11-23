@@ -2,14 +2,16 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:softroniics/services/helpers/enums/enum.dart';
-import 'package:softroniics/services/helpers/helper/helper.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:softroniics/helpers/enums/enum.dart';
+import 'package:softroniics/helpers/helper/helper.dart';
 
 class ProviderAuth extends ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   CurrentUserSatatus? userStatus;
   CallStatus? status;
   String errorMessage = '';
+  bool isPasswordVisible = false;
   TextEditingController emialController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -24,6 +26,15 @@ class ProviderAuth extends ChangeNotifier {
     } else {
       userStatus = CurrentUserSatatus.logined;
     }
+  }
+
+  void changePasswordVisibility() {
+    if (isPasswordVisible) {
+      isPasswordVisible = false;
+    } else {
+      isPasswordVisible = true;
+    }
+    notifyListeners();
   }
 
   Future<void> registerUser() async {
@@ -73,5 +84,39 @@ class ProviderAuth extends ChangeNotifier {
       log(e.toString());
     }
     log(status.toString());
+  }
+
+  Future<void> loginWithGoogleAC() async {
+    status = CallStatus.waiting;
+    notifyListeners();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+    try {
+      if (googleSignInAccount != null) {
+        // Handle successful Google sign-in
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final String? idToken = googleSignInAuthentication.idToken;
+        final String? accessToken = googleSignInAuthentication.accessToken;
+
+        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: idToken,
+          accessToken: accessToken,
+        );
+        await firebaseAuth.signInWithCredential(credential);
+        status = CallStatus.success;
+        notifyListeners();
+      } else {
+        log('else');
+        status = CallStatus.failed;
+        notifyListeners();
+      }
+    } catch (e) {
+      status = CallStatus.failed;
+      notifyListeners();
+      log(e.toString());
+    }
   }
 }

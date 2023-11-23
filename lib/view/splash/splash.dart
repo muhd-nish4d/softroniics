@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:softroniics/services/helpers/enums/enum.dart';
+import 'package:softroniics/helpers/enums/enum.dart';
 import 'package:softroniics/services/provider/auth_provider.dart';
 import 'package:softroniics/view/home/home.dart';
 import 'package:softroniics/view/login/login.dart';
@@ -39,7 +38,8 @@ class ScreenSplash extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-    Provider.of<ProviderAuth>(context, listen: false).isLoginedUser();
+                        Provider.of<ProviderAuth>(context, listen: false)
+                            .isLoginedUser();
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
